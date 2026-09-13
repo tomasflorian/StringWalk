@@ -1,0 +1,849 @@
+=== backwards ===
+
+  83 kinds · type part of one to begin
+$ # backwards is just another way in. the producer wrote
+$ # "ip, resolves-to, has-address, host" as one relation, so the reverse has a
+$ # name they chose, and `ip has-address` is how you ask for it.
+$ add ip has-address
+  has-address ip
+  --------------
+  10.0.0.5
+  10.2.14.7
+  10.2.14.9
+  10.9.0.4
+
+>  has-address ip
+
+  host 4/4·2   ip 3/4·2   route 2/4   endpoint 1/4   internal-ip 1/4   object 1/4   octet-sum 1/4   string 1/4
+$ add route
+  has-address ip | hop-of route
+  ---------------+------------------------------
+  10.0.0.5       | ?
+  10.2.14.7      | 10.2.14.7,10.2.0.1,192.0.2.9
+  10.2.14.9      | ?
+  10.9.0.4       | 10.9.0.4,10.2.0.1,203.0.113.5
+
+   has-address ip
+>     hop-of route
+
+  ip 2/2   trace 2/2   host 1/2
+
+=== garden ===
+
+  83 kinds · type part of one to begin
+$ # a nursery receipt and an auth log have nothing to say to each other. they
+$ # share one string — web-01.corp — because the order was submitted from a
+$ # machine somebody else was logging. merged, a rose reaches an account, and
+$ # that route is in none of the lines.
+$ schema gardener
+  gardener · 3 drawer(s) over 6/83 kind(s) · 3 member(s) this pile has no kind for: byte computername cpu
+  79 names · gardener · type part of one to begin
+$ add flower
+  flower — 3 kinds
+     flower       3   all of them
+     bugambilia   1
+     lilly        1
+     rose         1
+  say it again to mean it, anything else to cancel
+  79 names · gardener · type part of one to begin
+$ # three kinds under one drawer, so it says what it would merge and waits.
+$ add flower
+  flower
+  -----------------
+  Barbara Karst
+  Casa Blanca
+  Mme Isaac Pereire
+
+>  flower
+
+  receipt 3/3   itstuff 1/3·1   place 1/3
+$ add receipt
+  flower            | listed-on receipt
+  ------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Barbara Karst     | BEC DE JARDIN\norder 4417\nordered by dana\nsubmitted from web-01.corp\nship to paris\n1x rose Mme Isaac Pereire\n2x lilly Casa Blanca\n1x bugambilia Barbara Karst
+  Casa Blanca       | BEC DE JARDIN\norder 4417\nordered by dana\nsubmitted from web-01.corp\nship to paris\n1x rose Mme Isaac Pereire\n2x lilly Casa Blanca\n1x bugambilia Barbara Karst
+  Mme Isaac Pereire | BEC DE JARDIN\norder 4417\nordered by dana\nsubmitted from web-01.corp\nship to paris\n1x rose Mme Isaac Pereire\n2x lilly Casa Blanca\n1x bugambilia Barbara Karst
+
+   flower
+>     listed-on receipt
+
+  flower 1/1·3   itstuff 1/1·2   order 1/1   person 1/1   place 1/1
+$ # the receipt is a whole document and a column you step over rather than read.
+$ # display only: the next step walks out of the whole text, not out of the stub.
+$ shorten
+  listed-on receipt shortened · say it again to read it whole
+  flower            | listed-on receipt (short)
+  ------------------+--------------------------
+  Barbara Karst     | cde
+  Casa Blanca       | cde
+  Mme Isaac Pereire | cde
+
+   flower
+>     listed-on receipt   short
+
+  flower 1/1·3   itstuff 1/1·2   order 1/1   person 1/1   place 1/1
+$ add host
+  flower            | listed-on receipt (short) | submitted-from host via listed-on receipt
+  ------------------+---------------------------+------------------------------------------
+  Barbara Karst     | cde                       | web-01.corp
+  Casa Blanca       | cde                       | web-01.corp
+  Mme Isaac Pereire | cde                       | web-01.corp
+
+   flower
+      listed-on receipt   short
+>        submitted-from host
+
+  account 1/1   itstuff 1/1·1   receipt 1/1
+$ add account
+  flower            | listed-on receipt (short) | submitted-from host via listed-on receipt | ran-as account via submitted-from host via listed-on receipt
+  ------------------+---------------------------+-------------------------------------------+-------------------------------------------------------------
+  Barbara Karst     | cde                       | web-01.corp                               | www-data
+  Casa Blanca       | cde                       | web-01.corp                               | www-data
+  Mme Isaac Pereire | cde                       | web-01.corp                               | www-data
+
+   flower
+      listed-on receipt   short
+         submitted-from host
+>           ran-as account
+
+  itstuff 1/1·1
+$ # paris is the other overlap, and it goes the other way: the rose was bred
+$ # there, and rfg.pile's producer wrote paris into a csv row, a key-value block
+$ # and a json object without ever hearing about a nursery.
+$ cd /
+   flower
+      listed-on receipt   short
+         submitted-from host
+            ran-as account
+
+  79 names · gardener · type part of one · naming one replaces this reading
+$ add rose
+  rose — 2 ways
+     rose         1   all of them
+     rose bred    1
+     rose lists   1
+  rose at / would wipe the whole tree — 4 column(s), flower listed-on receipt submitted-from host ran-as account
+  say it again to mean it, anything else to cancel
+   flower
+      listed-on receipt   short
+         submitted-from host
+            ran-as account
+
+  79 names · gardener · type part of one · naming one replaces this reading
+$ add rose
+  wiped 4 column(s)
+  rose
+  -----------------
+  Mme Isaac Pereire
+
+>  rose
+
+  place 1/1   receipt 1/1
+$ add place
+  rose              | bred-in place
+  ------------------+--------------
+  Mme Isaac Pereire | paris
+
+   rose
+>     bred-in place
+
+  char 1/1   entropy 1/1   first-letter 1/1   flower 1/1·1   last-letter 1/1   length 1/1   object 1/1·2   pair 1/1   receipt 1/1   record 1/1   row 1/1·3   short-string 1/1   string 1/1·4   text 1/1·3   vowels 1/1   word 1/1
+
+=== hosts-and-accounts ===
+
+  83 kinds · type part of one to begin
+$ # a reading starts by naming a KIND. `host` alone would merge the six ways to
+$ # reach one; `host resolves-to` asks for the one the dns export wrote. after
+$ # that `account` and `ticket` are unambiguous from where you stand, so they go
+$ # straight in — and because there was only one way, the column says which.
+$ add host resolves-to
+  resolves-to host
+  ------------------
+  backup-03.corp
+  greenhouse-01.corp
+  mail-01.corp
+  web-01.corp
+
+>  resolves-to host
+
+  ip 4/4   account 2/4   bugambilia 1/4   receipt 1/4
+$ add account/ticket
+  resolves-to host   | ran-as account | raised ticket via ran-as account
+  -------------------+----------------+---------------------------------
+  backup-03.corp     | svc-deploy     | OPS-4412
+  greenhouse-01.corp | ?              | ?
+  mail-01.corp       | ?              | ?
+  web-01.corp        | www-data       | ?
+
+   resolves-to host
+      ran-as account
+>        raised ticket
+
+  account 1/1   person 1/1
+
+=== ips ===
+
+  83 kinds · type part of one to begin
+$ # `add` on its own at / is the whole addressing scheme: every kind anybody
+$ # named, how many rows it would open with, and whether choosing it is a choice.
+$ add
+  83 kind(s) · naming one is the first column
+  string             251   14 ways
+  short-string       158
+  word               152   2 ways
+  text                42   8 ways
+  host                16   8 ways
+  record              15   10 ways
+  row                 15   14 ways
+  char                13
+  ip                  13   12 ways
+  notes               13
+  password-record     13
+  username            10
+  blob                 9   4 ways
+  entropy              9
+  email                8   3 ways
+  field                8
+  kind                 8   2 ways
+  first-letter         7
+  password             7
+  sentence             7   2 ways
+  format               6
+  last-letter          6
+  name                 6   3 ways
+  company              5
+  hours                5
+  url                  5   2 ways
+  line                 4
+  object               4   6 ways
+  pair                 4   3 ways
+  paragraph            4
+  related              4
+  seq                  4
+  date                 3   4 ways
+  day                  3
+  emp                  3
+  endpoint             3   2 ways
+  internal-ip          3
+  length               3
+  port                 3   2 ways
+  account              2   2 ways
+  block                2   2 ways
+  city                 2
+  country              2
+  first                2
+  first-name           2
+  flag                 2
+  item                 2
+  last                 2
+  last-name            2
+  nation               2
+  octet-sum            2
+  place                2   3 ways
+  proj                 2
+  river                2
+  route                2   2 ways
+  table                2   2 ways
+  vowels               2
+  year                 2
+  addr                 1
+  bugambilia           1   2 ways
+  cidr                 1   4 ways
+  geo                  1
+  header               1
+  last-octet           1   2 ways
+  lilly                1
+  list                 1
+  mask                 1
+  month                1
+  number               1
+  octet4               1
+  order                1
+  person               1   2 ways
+  receipt              1   6 ways
+  region               1
+  rose                 1   2 ways
+  subnet               1
+  ticket               1   2 ways
+  timestamp            1
+  town                 1
+  trace                1
+  type                 1   2 ways
+  valid-ip             1
+  value                1   2 ways
+  83 kinds · type part of one to begin
+$ # `ip` is 12 ways, so it says so and waits. said again it takes all of them,
+$ # and the column is called `ip` because that is what it holds.
+$ add ip
+  ip — 12 ways
+     ip                        13   all of them
+     ip has-address            4
+     ip hops                   4
+     ip is                     4
+     ip contains               3
+     ip has                    3
+     ip previous               3
+     ip next                   2
+     ip octet-sum-of           2
+     ip last-octet-of          1
+     ip octet4-of              1
+     ip parsed-last-octet-of   1
+     ip parses                 1
+  say it again to mean it, anything else to cancel
+  83 kinds · type part of one to begin
+$ add ip
+  ip
+  ------------
+  10.0.0.5
+  10.2.0.1
+  10.2.14.7
+  10.2.14.9
+  10.20.30.1
+  10.20.30.2
+  10.9.0.4
+  192.0.2.9
+  192.168.1.10
+  192.168.1.2
+  192.168.1.3
+  203.0.113.42
+  8.8.8.8
+
+>  ip
+
+  host 8/13·3   ip 8/13·3   route 4/13   string 4/13   internal-ip 3/13   text 3/13   endpoint 2/13   entropy 2/13   octet-sum 2/13   cidr 1/13·2   email 1/13   last-octet 1/13·2   object 1/13   octet4 1/13   valid-ip 1/13
+$ # `host` from an ip is 4 ways — including the rows where a value is its own
+$ # host, which is what the pile says and not something to tidy away.
+$ add host
+  host — 3 ways
+     host               8/13   all of them
+     host is            4/13
+     host resolves-to   4/13
+     host next          1/13
+  say it again for all of them, or narrow it
+>  ip
+
+  host 8/13·3   ip 8/13·3   route 4/13   string 4/13   internal-ip 3/13   text 3/13   endpoint 2/13   entropy 2/13   octet-sum 2/13   cidr 1/13·2   email 1/13   last-octet 1/13·2   object 1/13   octet4 1/13   valid-ip 1/13
+$ add host
+  ip           | host
+  -------------+-------------------
+  10.0.0.5     | 10.0.0.5
+  10.0.0.5     | greenhouse-01.corp
+  10.2.0.1     | 203.0.113.5
+  10.2.14.7    | backup-03.corp
+  10.2.14.9    | web-01.corp
+  10.20.30.1   | ?
+  10.20.30.2   | ?
+  10.9.0.4     | mail-01.corp
+  192.0.2.9    | ?
+  192.168.1.10 | ?
+  192.168.1.2  | 192.168.1.2
+  192.168.1.3  | 192.168.1.3
+  203.0.113.42 | ?
+  8.8.8.8      | 8.8.8.8
+
+   ip
+>     host
+
+  ip 9/9·3   host 4/9·2   string 4/9   internal-ip 3/9   account 2/9   octet-sum 2/9   bugambilia 1/9   cidr 1/9·2   endpoint 1/9   last-octet 1/9·2   object 1/9   octet4 1/9   receipt 1/9   route 1/9   valid-ip 1/9
+$ add account
+  ip           | host               | ran-as account via host
+  -------------+--------------------+------------------------
+  10.0.0.5     | 10.0.0.5           | ?
+  10.0.0.5     | greenhouse-01.corp | ?
+  10.2.0.1     | 203.0.113.5        | ?
+  10.2.14.7    | backup-03.corp     | svc-deploy
+  10.2.14.9    | web-01.corp        | www-data
+  10.20.30.1   | ?                  | ?
+  10.20.30.2   | ?                  | ?
+  10.9.0.4     | mail-01.corp       | ?
+  192.0.2.9    | ?                  | ?
+  192.168.1.10 | ?                  | ?
+  192.168.1.2  | 192.168.1.2        | ?
+  192.168.1.3  | 192.168.1.3        | ?
+  203.0.113.42 | ?                  | ?
+  8.8.8.8      | 8.8.8.8            | ?
+
+   ip
+      host
+>        ran-as account
+
+  host 2/2   related 1/2   ticket 1/2
+
+=== jumps ===
+
+  83 kinds · type part of one to begin
+$ # one step at a time is fine until you do not know the way. `jump` asks the
+$ # same question with a distance on it: name the kind you are after and it says
+$ # which routes reach it.
+$ add record username-of
+  username-of record
+  ------------------
+  PasswordRecord:61
+  PasswordRecord:62
+  PasswordRecord:74
+  PasswordRecord:75
+  PasswordRecord:76
+  PasswordRecord:77
+  PasswordRecord:80
+  PasswordRecord:81
+  PasswordRecord:82
+  PasswordRecord:83
+
+>  username-of record
+
+  blob 10/10   notes 10/10   password-record 10/10   string 10/10   username 10/10   company 9/10   password 8/10   year 8/10
+$ jump ip
+  from username-of record · 3 route(s) reaching ip within 3 steps
+  notes/ip                  3/10
+  password-record/notes/ip  3/10
+  string/notes/ip           3/10
+  add one of them
+>  username-of record
+
+  blob 10/10   notes 10/10   password-record 10/10   string 10/10   username 10/10   company 9/10   password 8/10   year 8/10
+$ # what it prints is an add path, so finding a route and taking it stay two
+$ # acts — `add` is still the only thing that changes anything.
+$ add notes/ip
+  username-of record | has notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | contains ip via has notes
+  -------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------
+  PasswordRecord:61  | id_password_protected                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | ?
+  PasswordRecord:62  | BitLocker\\ Recovery\\ Key\\ 4C1F2A9E.TXT \n﻿BitLocker Drive Encryption recovery key\n\nTo verify that this is the correct recovery key, compare the start of the following identifier with the identifier value displayed on your PC.\n\nIdentifier:\n\n    4C1F2A9E-77B3-4D05-9E61-2AB8C4F0D913\n\nIf the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.\n\nRecovery Key:\n\n    448291-036714-592038-117465-880253-604197-329586-741029\n\nIf the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.\nTry another recovery key, or refer to https://go.microsoft.com/fwlink/?LinkID=260589 for additional assistance.\n | ?
+  PasswordRecord:74  | ((\n\nbright cast\n\n\n\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | ?
+  PasswordRecord:75  | ((\npixvault@larkfield.example\n\npixvault login\n\n\n\n\n\n\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | ?
+  PasswordRecord:76  | ((\nvoip sip trunks\nvoip\nhttps://voipline.example/   voip2016\nflow gate\nhttps://flowgate.example  summer2016\ncalltide\nhttps://calltide.example  Kp9mVt2Xz7Lq4Rb\n\n\n\n\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | ?
+  PasswordRecord:77  | ((\n\n\npfsense\n10.20.30.1\n\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 10.20.30.1
+  PasswordRecord:80  | ((\n\nrobert@203.0.113.42 \nssh web2\n/MEDIA/ridgeway.example/dev_fon.ridgeway/\n\nweb daemon\n\n\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | 203.0.113.42
+  PasswordRecord:81  | ((\n10.20.30.2\nhyper-v\n\n\nlogin to 204 first\n(way to login to ossec through hyperv)\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 10.20.30.2
+  PasswordRecord:82  | ((\n\n\n\n\n\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | ?
+  PasswordRecord:83  | ((\n\nvoipline.example $17 remaining\n\n\n\n))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | ?
+
+   username-of record
+      has notes
+>        contains ip
+
+  text 3/3   entropy 2/3   email 1/3
+$ # the middle of a jumped route is a column you stepped over rather than read,
+$ # and here it is a BitLocker recovery key. shortening is not automatic: a
+$ # column cannot be known to be a waypoint until you have seen what is in it.
+$ shorten ..
+  has notes shortened · say it again to read it whole
+  username-of record | has notes (short) | contains ip via has notes
+  -------------------+-------------------+--------------------------
+  PasswordRecord:61  | 955               | ?
+  PasswordRecord:62  | 642               | ?
+  PasswordRecord:74  | 186               | ?
+  PasswordRecord:75  | c60               | ?
+  PasswordRecord:76  | e02               | ?
+  PasswordRecord:77  | 7e8               | 10.20.30.1
+  PasswordRecord:80  | 3b4               | 203.0.113.42
+  PasswordRecord:81  | 731               | 10.20.30.2
+  PasswordRecord:82  | 1ef               | ?
+  PasswordRecord:83  | 477               | ?
+
+   username-of record
+      has notes   short
+>        contains ip
+
+  text 3/3   entropy 2/3   email 1/3
+
+=== merging ===
+
+  83 kinds · type part of one to begin
+$ # a kind with more than one way in does not guess. it says what it would merge
+$ # and waits.
+$ add kind
+  kind — 2 ways
+     kind           8   all of them
+     kind example   5
+     kind is-a      3
+  say it again to mean it, anything else to cancel
+  83 kinds · type part of one to begin
+$ # said again it takes all of them. `is-a kind` and `example kind` are the two
+$ # ends of one relation, so this column holds what each kind is an example of
+$ # AND what is an example of it. it is called `kind` because that is what it
+$ # holds — a column says the phrase only when there is one.
+$ add kind
+  kind
+  --------
+  account
+  address
+  host
+  identity
+  ip
+  person
+  record
+  ticket
+
+>  kind
+
+  kind 8/8·2
+$ # narrowing is always there. one way in, so this column says the phrase.
+$ add kind is-a
+  kind     | is-a kind
+  ---------+----------
+  account  | identity
+  address  | ?
+  host     | address
+  identity | ?
+  ip       | address
+  person   | identity
+  record   | ?
+  ticket   | record
+
+   kind
+>     is-a kind
+
+  kind 3/3
+
+=== notes ===
+
+  83 kinds · type part of one to begin
+$ # a column you step over rather than read. every password record has a notes
+$ # blob, and one of them is 700 characters of a BitLocker recovery key, so the
+$ # table is unreadable before you have read anything.
+$ add record username-of
+  username-of record
+  ------------------
+  PasswordRecord:61
+  PasswordRecord:62
+  PasswordRecord:74
+  PasswordRecord:75
+  PasswordRecord:76
+  PasswordRecord:77
+  PasswordRecord:80
+  PasswordRecord:81
+  PasswordRecord:82
+  PasswordRecord:83
+
+>  username-of record
+
+  blob 10/10   notes 10/10   password-record 10/10   string 10/10   username 10/10   company 9/10   password 8/10   year 8/10
+$ add notes
+  username-of record | has notes
+  -------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  PasswordRecord:61  | id_password_protected
+  PasswordRecord:62  | BitLocker\\ Recovery\\ Key\\ 4C1F2A9E.TXT \n﻿BitLocker Drive Encryption recovery key\n\nTo verify that this is the correct recovery key, compare the start of the following identifier with the identifier value displayed on your PC.\n\nIdentifier:\n\n    4C1F2A9E-77B3-4D05-9E61-2AB8C4F0D913\n\nIf the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.\n\nRecovery Key:\n\n    448291-036714-592038-117465-880253-604197-329586-741029\n\nIf the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.\nTry another recovery key, or refer to https://go.microsoft.com/fwlink/?LinkID=260589 for additional assistance.\n
+  PasswordRecord:74  | ((\n\nbright cast\n\n\n\n))
+  PasswordRecord:75  | ((\npixvault@larkfield.example\n\npixvault login\n\n\n\n\n\n\n))
+  PasswordRecord:76  | ((\nvoip sip trunks\nvoip\nhttps://voipline.example/   voip2016\nflow gate\nhttps://flowgate.example  summer2016\ncalltide\nhttps://calltide.example  Kp9mVt2Xz7Lq4Rb\n\n\n\n\n))
+  PasswordRecord:77  | ((\n\n\npfsense\n10.20.30.1\n\n))
+  PasswordRecord:80  | ((\n\nrobert@203.0.113.42 \nssh web2\n/MEDIA/ridgeway.example/dev_fon.ridgeway/\n\nweb daemon\n\n\n))
+  PasswordRecord:81  | ((\n10.20.30.2\nhyper-v\n\n\nlogin to 204 first\n(way to login to ossec through hyperv)\n))
+  PasswordRecord:82  | ((\n\n\n\n\n\n))
+  PasswordRecord:83  | ((\n\nvoipline.example $17 remaining\n\n\n\n))
+
+   username-of record
+>     has notes
+
+  record 10/10   word 10/10   ip 3/10   email 2/10   url 2/10   entropy 1/10   text 1/10
+$ # `shorten` draws it as a hash instead. display only — the value still joins,
+$ # still steps, and still counts, which the next column proves: `ip` walks out
+$ # of the whole notes text, not out of the stub.
+$ shorten
+  has notes shortened · say it again to read it whole
+  username-of record | has notes (short)
+  -------------------+------------------
+  PasswordRecord:61  | 955
+  PasswordRecord:62  | 642
+  PasswordRecord:74  | 186
+  PasswordRecord:75  | c60
+  PasswordRecord:76  | e02
+  PasswordRecord:77  | 7e8
+  PasswordRecord:80  | 3b4
+  PasswordRecord:81  | 731
+  PasswordRecord:82  | 1ef
+  PasswordRecord:83  | 477
+
+   username-of record
+>     has notes   short
+
+  record 10/10   word 10/10   ip 3/10   email 2/10   url 2/10   entropy 1/10   text 1/10
+$ add ip
+  username-of record | has notes (short) | contains ip via has notes
+  -------------------+-------------------+--------------------------
+  PasswordRecord:61  | 955               | ?
+  PasswordRecord:62  | 642               | ?
+  PasswordRecord:74  | 186               | ?
+  PasswordRecord:75  | c60               | ?
+  PasswordRecord:76  | e02               | ?
+  PasswordRecord:77  | 7e8               | 10.20.30.1
+  PasswordRecord:80  | 3b4               | 203.0.113.42
+  PasswordRecord:81  | 731               | 10.20.30.2
+  PasswordRecord:82  | 1ef               | ?
+  PasswordRecord:83  | 477               | ?
+
+   username-of record
+      has notes   short
+>        contains ip
+
+  text 3/3   entropy 2/3   email 1/3
+
+=== schemas ===
+
+  83 kinds · type part of one to begin
+$ # a schema is a taxonomy loaded after the fact. it says which kinds are shown
+$ # under one name, so naming a thing is one word instead of seventeen. it
+$ # changes no line and no column already built — only what the menu offers and
+$ # what a column built from a drawer is called.
+$ schema triage
+  triage · 11 drawer(s) over 70/83 kind(s)
+  19 names · triage · type part of one to begin
+$ # on its own it draws what is in force. a drawer carries the count of values it
+$ # reaches, because that is the one thing about it you cannot read off its name;
+$ # a leaf carries its name, because its count is one add away.
+$ schema
+  triage           375   70 kinds
+     network        47   17 kinds
+        address     24   5 kinds
+           ip  internal-ip  valid-ip  addr  host
+        locator      9   2 kinds
+           url  email
+        subnets      5   6 kinds
+           subnet  cidr  mask  octet4  last-octet  octet-sum
+        path         3   2 kinds
+           route  trace
+        port  endpoint
+     identity       60   11 kinds
+        person  name  first-name  last-name  username  account  emp  company
+        password  password-record  notes
+     text-shape    301   15 kinds
+        string  short-string  word  char  text  sentence  paragraph  blob
+        line  length  entropy  vowels  first-letter  last-letter  format
+     tabular        60   13 kinds
+        table  row  header  field  pair  list  item  object  block  seq  first
+        last  record
+     time           15   6 kinds
+        date  year  month  day  timestamp  hours
+     geography       8   8 kinds
+        nation  country  region  city  town  river  geo  place
+
+  triage · 11 drawer(s) over 70/83 kind(s)
+  schemas: gardener  netops  triage
+  19 names · triage · type part of one to begin
+$ # 78 kinds become 14 names. the counts are unions at every level and never
+$ # sums: text-shape reads 301 where its fifteen kinds add up to about 670, and
+$ # the gap is the strings that are a word and a string and a short-string at
+$ # once.
+$ add
+  19 name(s) over 83 kind(s) · triage · naming one is the first column
+  network        47   17 kinds
+  identity       60   11 kinds
+  text-shape    301   15 kinds
+  tabular        60   13 kinds
+  time           15   6 kinds
+  geography       8   8 kinds
+
+  13 outside triage
+  kind 8·2   proj 2          number 1     rose 1·2    value 1·2
+  related 4  bugambilia 1·2  order 1      ticket 1·2
+  flag 2     lilly 1         receipt 1·6  type 1·2
+  19 names · triage · type part of one to begin
+$ # a drawer is added, narrowed and typed exactly like a kind. more than one way
+$ # in, so it says what it would merge and waits — which is also how you look
+$ # inside one without taking it.
+$ add network
+  network — 17 kinds
+     network       47   all of them
+     host          16
+     ip            13
+     email         8
+     url           5
+     endpoint      3
+     internal-ip   3
+     port          3
+     octet-sum     2
+     route         2
+     addr          1
+     cidr          1
+     last-octet    1
+     mask          1
+     octet4        1
+     subnet        1
+     trace         1
+     valid-ip      1
+  say it again to mean it, anything else to cancel
+  19 names · triage · type part of one to begin
+$ add network
+  network
+  ----------------------------------------------
+  10.0.0.5
+  10.0.0.5:22
+  10.2.0.1
+  10.2.14.7
+  10.2.14.7,10.2.0.1,192.0.2.9
+  10.2.14.9
+  10.20.30.1
+  10.20.30.2
+  10.9.0.4
+  10.9.0.4,10.2.0.1,203.0.113.5
+  15
+  192.0.2.9
+  192.168.1.10
+  192.168.1.10:443
+  192.168.1.10:8080
+  192.168.1.2
+  192.168.1.3
+  192.168.1.3/24
+  203.0.113.42
+  203.0.113.5
+  22
+  24
+  3
+  364
+  443
+  8.8.8.8
+  8080
+  alice@larkfield.example
+  backup-03.corp
+  calltide.example
+  db01.internal
+  flowgate.example
+  go.microsoft.com
+  greenhouse-01.corp
+  https://becdejardin.example
+  https://calltide.example
+  https://flowgate.example
+  https://go.microsoft.com/fwlink/?LinkID=260589
+  https://voipline.example/
+  larkfield.example
+  mail-01.corp
+  pixvault@larkfield.example
+  robert@203.0.113.42
+  trace
+  user@db.local
+  voipline.example
+  web-01.corp
+
+>  network
+
+  network 44/47·15   text-shape 19/47·3   tabular 3/47·3   identity 2/47·1   receipt 2/47·2   bugambilia 1/47   number 1/47
+$ # the same offers as one step at a time, rolled up. 43 of the 45 values can
+$ # step to something that lands back inside network, and the exits worth seeing
+$ # are the 19 into text and the 2 into identity.
+$ add
+  network      44/47   15 kinds
+  text-shape   19/47   3 kinds
+  tabular      3/47   3 kinds
+  identity     2/47   1 kind
+  receipt      2/47   2 ways
+  bugambilia   1/47
+  number       1/47
+>  network
+
+  network 44/47·15   text-shape 19/47·3   tabular 3/47·3   identity 2/47·1   receipt 2/47·2   bugambilia 1/47   number 1/47
+$ # the same column under a network engineer's schema. same rows, same steps,
+$ # different vocabulary: triage says you are inside the network world, netops
+$ # says where inside. addresses reads 21, exactly what ip reads alone, so
+$ # internal-ip and valid-ip reach nothing ip does not — the pile agreeing with
+$ # what the schema claimed was narrower.
+$ schema netops
+  netops · 7 drawer(s) over 45/83 kind(s)
+>  network
+
+  addresses 22/47·3   noise 20/47·6   host 17/47·5   paths 8/47·2   services 8/47·2   locators 7/47·1   subnets 4/47·6   account 2/47   receipt 2/47·2   bugambilia 1/47   number 1/47
+$ add
+  addresses    22/47   3 kinds
+  noise        20/47   6 kinds
+  host         17/47   5 ways
+  paths        8/47   2 kinds
+  services     8/47   2 kinds
+  locators     7/47   1 kind
+  subnets      4/47   6 kinds
+  account      2/47
+  receipt      2/47   2 ways
+  bugambilia   1/47
+  number       1/47
+>  network
+
+  addresses 22/47·3   noise 20/47·6   host 17/47·5   paths 8/47·2   services 8/47·2   locators 7/47·1   subnets 4/47·6   account 2/47   receipt 2/47·2   bugambilia 1/47   number 1/47
+$ # and with nothing in force, the 23 kinds that were there the whole time. the
+$ # column keeps the name it was built with, because a schema never revises a
+$ # reading already made.
+$ schema off
+  no schema · 83 kind(s)
+>  network
+
+  ip 22/47·11   host 17/47·5   text 11/47   entropy 10/47   string 8/47·2   email 7/47·2   route 6/47·2   endpoint 5/47·2   port 4/47·2   internal-ip 3/47   account 2/47   cidr 2/47·4   octet-sum 2/47   receipt 2/47·2   trace 2/47   bugambilia 1/47   last-octet 1/47·2   mask 1/47   number 1/47   object 1/47   octet4 1/47   record 1/47·2   row 1/47   subnet 1/47   valid-ip 1/47
+$ add
+  ip            22/47   11 ways
+  host          17/47   5 ways
+  text          11/47
+  entropy       10/47
+  string        8/47   2 ways
+  email         7/47   2 ways
+  route         6/47   2 ways
+  endpoint      5/47   2 ways
+  port          4/47   2 ways
+  internal-ip   3/47
+  account       2/47
+  cidr          2/47   4 ways
+  octet-sum     2/47
+  receipt       2/47   2 ways
+  trace         2/47
+  bugambilia    1/47
+  last-octet    1/47   2 ways
+  mask          1/47
+  number        1/47
+  object        1/47
+  octet4        1/47
+  record        1/47   2 ways
+  row           1/47
+  subnet        1/47
+  valid-ip      1/47
+>  network
+
+  ip 22/47·11   host 17/47·5   text 11/47   entropy 10/47   string 8/47·2   email 7/47·2   route 6/47·2   endpoint 5/47·2   port 4/47·2   internal-ip 3/47   account 2/47   cidr 2/47·4   octet-sum 2/47   receipt 2/47·2   trace 2/47   bugambilia 1/47   last-octet 1/47·2   mask 1/47   number 1/47   object 1/47   octet4 1/47   record 1/47·2   row 1/47   subnet 1/47   valid-ip 1/47
+$ # a schema does not have to match the pile. six of the gardener's members are
+$ # not kinds anybody here wrote, so they read zero and it says which.
+$ schema gardener
+  gardener · 3 drawer(s) over 6/83 kind(s) · 3 member(s) this pile has no kind for: byte computername cpu
+>  network
+
+  itstuff 31/47·2   text 11/47   entropy 10/47   string 8/47·2   email 7/47·2   route 6/47·2   endpoint 5/47·2   port 4/47·2   internal-ip 3/47   account 2/47   cidr 2/47·4   octet-sum 2/47   receipt 2/47·2   trace 2/47   flower 1/47·1   last-octet 1/47·2   mask 1/47   number 1/47   object 1/47   octet4 1/47   record 1/47·2   row 1/47   subnet 1/47   valid-ip 1/47
+
+=== traceroutes ===
+
+  83 kinds · type part of one to begin
+$ # a fact is exactly three strings, so no line holds a route. a traceroute is a
+$ # document: the whole route is one value, and the hops found inside it are
+$ # separate facts about it.
+$ add route produced
+  produced route
+  -----------------------------
+  10.2.14.7,10.2.0.1,192.0.2.9
+  10.9.0.4,10.2.0.1,203.0.113.5
+
+>  produced route
+
+  ip 2/2   trace 2/2   host 1/2
+$ add ip hops
+  produced route                | hops ip
+  ------------------------------+----------
+  10.2.14.7,10.2.0.1,192.0.2.9  | 10.2.0.1
+  10.2.14.7,10.2.0.1,192.0.2.9  | 10.2.14.7
+  10.2.14.7,10.2.0.1,192.0.2.9  | 192.0.2.9
+  10.9.0.4,10.2.0.1,203.0.113.5 | 10.2.0.1
+  10.9.0.4,10.2.0.1,203.0.113.5 | 10.9.0.4
+
+   produced route
+>     hops ip
+
+  ip 4/4·2   route 4/4   host 3/4·2
+$ # both routes pass through 10.2.0.1, so asking for the next host answers from
+$ # whichever line says so, including the other route's. the route is sitting in
+$ # the row, so the row shows you: 203.0.113.5 is not in the first route's text.
+$ add host next
+  produced route                | hops ip   | next host via hops ip
+  ------------------------------+-----------+----------------------
+  10.2.14.7,10.2.0.1,192.0.2.9  | 10.2.0.1  | 203.0.113.5
+  10.2.14.7,10.2.0.1,192.0.2.9  | 10.2.14.7 | ?
+  10.2.14.7,10.2.0.1,192.0.2.9  | 192.0.2.9 | ?
+  10.9.0.4,10.2.0.1,203.0.113.5 | 10.2.0.1  | 203.0.113.5
+  10.9.0.4,10.2.0.1,203.0.113.5 | 10.9.0.4  | ?
+
+   produced route
+      hops ip
+>        next host
+
+  ip 1/1   route 1/1
+
