@@ -1,7 +1,7 @@
 # StringWalk
 
 > This study continues in EdgeOnEdge.
-> StringWalk explored reading connected data through three-string facts. EdgeOnEdge carries forward the pile, shared-string joins and > > > column walk, while moving the description of a connection into tags on the connection itself.
+> StringWalk explored reading connected data through three-string facts. EdgeOnEdge carries forward the pile, shared-string joins and column walk, while moving the description of a connection into tags on the connection itself.
 
 Everyone's paperwork is a useless pile until somebody spends a week organizing
 it. This skips that week: it cuts the pile apart and puts it back together so
