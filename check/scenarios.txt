@@ -1,6 +1,6 @@
 === backwards ===
 
-  83 kinds · type part of one to begin
+  85 kinds · add one to begin
 $ # backwards is just another way in. the producer wrote
 $ # "ip, resolves-to, has-address, host" as one relation, so the reverse has a
 $ # name they chose, and `ip has-address` is how you ask for it.
@@ -30,24 +30,17 @@ $ add route
 
 === garden ===
 
-  83 kinds · type part of one to begin
+  85 kinds · add one to begin
 $ # a nursery receipt and an auth log have nothing to say to each other. they
 $ # share one string — web-01.corp — because the order was submitted from a
 $ # machine somebody else was logging. merged, a rose reaches an account, and
 $ # that route is in none of the lines.
-$ schema gardener
-  gardener · 3 drawer(s) over 6/83 kind(s) · 3 member(s) this pile has no kind for: byte computername cpu
-  79 names · gardener · type part of one to begin
-$ add flower
-  flower — 3 kinds
-     flower       3   all of them
-     bugambilia   1
-     lilly        1
-     rose         1
-  say it again to mean it, anything else to cancel
-  79 names · gardener · type part of one to begin
-$ # three kinds under one drawer, so it says what it would merge and waits.
-$ add flower
+$ taxonomy gardener
+  gardener · 3 names over 6/9 of its kinds in this pile · not here: byte  computername  cpu
+  2 names · gardener · add one to begin
+$ # flower is the gardener's name for three kinds, written out as one group. there
+$ # is more than one way into it, so it takes a * to mean all of them.
+$ add flower*
   flower
   -----------------
   Barbara Karst
@@ -56,7 +49,7 @@ $ add flower
 
 >  flower
 
-  receipt 3/3   itstuff 1/3·1   place 1/3
+  itstuff 1/3
 $ add receipt
   flower            | listed-on receipt
   ------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -67,11 +60,11 @@ $ add receipt
    flower
 >     listed-on receipt
 
-  flower 1/1·3   itstuff 1/1·2   order 1/1   person 1/1   place 1/1
+  flower 1/1·3   itstuff 1/1·2
 $ # the receipt is a whole document and a column you step over rather than read.
 $ # display only: the next step walks out of the whole text, not out of the stub.
 $ shorten
-  listed-on receipt shortened · say it again to read it whole
+  listed-on receipt shortened · shorten again to read it whole
   flower            | listed-on receipt (short)
   ------------------+--------------------------
   Barbara Karst     | cde
@@ -81,7 +74,7 @@ $ shorten
    flower
 >     listed-on receipt   short
 
-  flower 1/1·3   itstuff 1/1·2   order 1/1   person 1/1   place 1/1
+  flower 1/1·3   itstuff 1/1·2
 $ add host
   flower            | listed-on receipt (short) | submitted-from host via listed-on receipt
   ------------------+---------------------------+------------------------------------------
@@ -93,7 +86,7 @@ $ add host
       listed-on receipt   short
 >        submitted-from host
 
-  account 1/1   itstuff 1/1·1   receipt 1/1
+  itstuff 1/1
 $ add account
   flower            | listed-on receipt (short) | submitted-from host via listed-on receipt | ran-as account via submitted-from host via listed-on receipt
   ------------------+---------------------------+-------------------------------------------+-------------------------------------------------------------
@@ -106,7 +99,7 @@ $ add account
          submitted-from host
 >           ran-as account
 
-  itstuff 1/1·1
+  itstuff 1/1
 $ # paris is the other overlap, and it goes the other way: the rose was bred
 $ # there, and rfg.pile's producer wrote paris into a csv row, a key-value block
 $ # and a json object without ever hearing about a nursery.
@@ -116,29 +109,15 @@ $ cd /
          submitted-from host
             ran-as account
 
-  79 names · gardener · type part of one · naming one replaces this reading
-$ add rose
-  rose — 2 ways
-     rose         1   all of them
-     rose bred    1
-     rose lists   1
-  rose at / would wipe the whole tree — 4 column(s), flower listed-on receipt submitted-from host ran-as account
-  say it again to mean it, anything else to cancel
-   flower
-      listed-on receipt   short
-         submitted-from host
-            ran-as account
-
-  79 names · gardener · type part of one · naming one replaces this reading
-$ add rose
-  wiped 4 column(s)
+  2 names · gardener · add one · adding one here replaces this reading
+$ add rose*
   rose
   -----------------
   Mme Isaac Pereire
 
 >  rose
 
-  place 1/1   receipt 1/1
+  nothing in gardener from here · add --all shows 2 kinds
 $ add place
   rose              | bred-in place
   ------------------+--------------
@@ -147,11 +126,11 @@ $ add place
    rose
 >     bred-in place
 
-  char 1/1   entropy 1/1   first-letter 1/1   flower 1/1·1   last-letter 1/1   length 1/1   object 1/1·2   pair 1/1   receipt 1/1   record 1/1   row 1/1·3   short-string 1/1   string 1/1·4   text 1/1·3   vowels 1/1   word 1/1
+  flower 1/1
 
 === hosts-and-accounts ===
 
-  83 kinds · type part of one to begin
+  85 kinds · add one to begin
 $ # a reading starts by naming a KIND. `host` alone would merge the six ways to
 $ # reach one; `host resolves-to` asks for the one the dns export wrote. after
 $ # that `account` and `ticket` are unambiguous from where you stand, so they go
@@ -183,34 +162,36 @@ $ add account/ticket
 
 === ips ===
 
-  83 kinds · type part of one to begin
+  85 kinds · add one to begin
 $ # `add` on its own at / is the whole addressing scheme: every kind anybody
 $ # named, how many rows it would open with, and whether choosing it is a choice.
 $ add
-  83 kind(s) · naming one is the first column
+  85 kind(s) · naming one is the first column
   string             251   14 ways
   short-string       158
   word               152   2 ways
-  text                42   8 ways
+  text                43   8 ways
   host                16   8 ways
-  record              15   10 ways
   row                 15   14 ways
+  record              14   10 ways
   char                13
   ip                  13   12 ways
   notes               13
   password-record     13
+  email               12   5 ways
   username            10
-  blob                 9   4 ways
   entropy              9
-  email                8   3 ways
+  blob                 8   4 ways
   field                8
   kind                 8   2 ways
   first-letter         7
   password             7
   sentence             7   2 ways
+  domain               6
   format               6
   last-letter          6
   name                 6   3 ways
+  user                 6
   company              5
   hours                5
   url                  5   2 ways
@@ -271,27 +252,27 @@ $ add
   type                 1   2 ways
   valid-ip             1
   value                1   2 ways
-  83 kinds · type part of one to begin
-$ # `ip` is 12 ways, so it says so and waits. said again it takes all of them,
-$ # and the column is called `ip` because that is what it holds.
+  85 kinds · add one to begin
+$ # `ip` is 12 ways, so without a * it says what it would merge and adds nothing.
 $ add ip
-  ip — 12 ways
-     ip                        13   all of them
-     ip has-address            4
-     ip hops                   4
-     ip is                     4
-     ip contains               3
-     ip has                    3
-     ip previous               3
-     ip next                   2
-     ip octet-sum-of           2
-     ip last-octet-of          1
-     ip octet4-of              1
-     ip parsed-last-octet-of   1
-     ip parses                 1
-  say it again to mean it, anything else to cancel
-  83 kinds · type part of one to begin
-$ add ip
+  ip has 12 ways in this pile · say ip* or narrow it
+     ip*
+     ip has-address
+     ip hops
+     ip is
+     ip contains
+     ip has
+     ip previous
+     ip next
+     ip octet-sum-of
+     ip last-octet-of
+     ip octet4-of
+     ip parsed-last-octet-of
+     ip parses
+  85 kinds · add one to begin
+$ # with a * it takes all of them, and the column is called `ip` because that is
+$ # what it holds.
+$ add ip*
   ip
   ------------
   10.0.0.5
@@ -310,20 +291,10 @@ $ add ip
 
 >  ip
 
-  host 8/13·3   ip 8/13·3   route 4/13   string 4/13   internal-ip 3/13   text 3/13   endpoint 2/13   entropy 2/13   octet-sum 2/13   cidr 1/13·2   email 1/13   last-octet 1/13·2   object 1/13   octet4 1/13   valid-ip 1/13
+  host 8/13·3   ip 8/13·3   route 4/13   string 4/13   internal-ip 3/13   text 3/13   endpoint 2/13   entropy 2/13   octet-sum 2/13   cidr 1/13·2   email 1/13·2   last-octet 1/13·2   object 1/13   octet4 1/13   valid-ip 1/13
 $ # `host` from an ip is 4 ways — including the rows where a value is its own
 $ # host, which is what the pile says and not something to tidy away.
-$ add host
-  host — 3 ways
-     host               8/13   all of them
-     host is            4/13
-     host resolves-to   4/13
-     host next          1/13
-  say it again for all of them, or narrow it
->  ip
-
-  host 8/13·3   ip 8/13·3   route 4/13   string 4/13   internal-ip 3/13   text 3/13   endpoint 2/13   entropy 2/13   octet-sum 2/13   cidr 1/13·2   email 1/13   last-octet 1/13·2   object 1/13   octet4 1/13   valid-ip 1/13
-$ add host
+$ add host*
   ip           | host
   -------------+-------------------
   10.0.0.5     | 10.0.0.5
@@ -371,10 +342,10 @@ $ add account
 
 === jumps ===
 
-  83 kinds · type part of one to begin
-$ # one step at a time is fine until you do not know the way. `jump` asks the
-$ # same question with a distance on it: name the kind you are after and it says
-$ # which routes reach it.
+  85 kinds · add one to begin
+$ # one step at a time is fine until you do not know the way. `jump` asked the
+$ # same question with a distance on it — and now waits for offers further out,
+$ # which the session does not have yet, so all it can do is say so.
 $ add record username-of
   username-of record
   ------------------
@@ -393,16 +364,11 @@ $ add record username-of
 
   blob 10/10   notes 10/10   password-record 10/10   string 10/10   username 10/10   company 9/10   password 8/10   year 8/10
 $ jump ip
-  from username-of record · 3 route(s) reaching ip within 3 steps
-  notes/ip                  3/10
-  password-record/notes/ip  3/10
-  string/notes/ip           3/10
-  add one of them
+  jump waits on offers further out, which the session does not have yet
 >  username-of record
 
   blob 10/10   notes 10/10   password-record 10/10   string 10/10   username 10/10   company 9/10   password 8/10   year 8/10
-$ # what it prints is an add path, so finding a route and taking it stay two
-$ # acts — `add` is still the only thing that changes anything.
+$ # the route it used to print, taken by hand.
 $ add notes/ip
   username-of record | has notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | contains ip via has notes
   -------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------
@@ -421,12 +387,11 @@ $ add notes/ip
       has notes
 >        contains ip
 
-  text 3/3   entropy 2/3   email 1/3
-$ # the middle of a jumped route is a column you stepped over rather than read,
-$ # and here it is a BitLocker recovery key. shortening is not automatic: a
-$ # column cannot be known to be a waypoint until you have seen what is in it.
+  text 3/3   entropy 2/3   email 1/3·2
+$ # the middle of that route is a column you stepped over rather than read, and
+$ # here it is a BitLocker recovery key. shortening is not automatic: a column
+$ # cannot be known to be a waypoint until you have seen what is in it.
 $ shorten ..
-  has notes shortened · say it again to read it whole
   username-of record | has notes (short) | contains ip via has notes
   -------------------+-------------------+--------------------------
   PasswordRecord:61  | 955               | ?
@@ -444,25 +409,24 @@ $ shorten ..
       has notes   short
 >        contains ip
 
-  text 3/3   entropy 2/3   email 1/3
+  text 3/3   entropy 2/3   email 1/3·2
 
 === merging ===
 
-  83 kinds · type part of one to begin
-$ # a kind with more than one way in does not guess. it says what it would merge
-$ # and waits.
+  85 kinds · add one to begin
+$ # a kind with more than one way in does not guess. without a * it says what it
+$ # would merge, and adds nothing.
 $ add kind
-  kind — 2 ways
-     kind           8   all of them
-     kind example   5
-     kind is-a      3
-  say it again to mean it, anything else to cancel
-  83 kinds · type part of one to begin
-$ # said again it takes all of them. `is-a kind` and `example kind` are the two
+  kind has 2 ways in this pile · say kind* or narrow it
+     kind*
+     kind example
+     kind is-a
+  85 kinds · add one to begin
+$ # with a * it takes all of them. `is-a kind` and `example kind` are the two
 $ # ends of one relation, so this column holds what each kind is an example of
 $ # AND what is an example of it. it is called `kind` because that is what it
 $ # holds — a column says the phrase only when there is one.
-$ add kind
+$ add kind*
   kind
   --------
   account
@@ -497,7 +461,7 @@ $ add kind is-a
 
 === notes ===
 
-  83 kinds · type part of one to begin
+  85 kinds · add one to begin
 $ # a column you step over rather than read. every password record has a notes
 $ # blob, and one of them is 700 characters of a BitLocker recovery key, so the
 $ # table is unreadable before you have read anything.
@@ -540,7 +504,7 @@ $ # `shorten` draws it as a hash instead. display only — the value still joins
 $ # still steps, and still counts, which the next column proves: `ip` walks out
 $ # of the whole notes text, not out of the stub.
 $ shorten
-  has notes shortened · say it again to read it whole
+  has notes shortened · shorten again to read it whole
   username-of record | has notes (short)
   -------------------+------------------
   PasswordRecord:61  | 955
@@ -576,27 +540,23 @@ $ add ip
       has notes   short
 >        contains ip
 
-  text 3/3   entropy 2/3   email 1/3
+  text 3/3   entropy 2/3   email 1/3·2
 
-=== schemas ===
+=== taxonomies ===
 
-  83 kinds · type part of one to begin
-$ # a schema is a taxonomy loaded after the fact. it says which kinds are shown
-$ # under one name, so naming a thing is one word instead of seventeen. it
-$ # changes no line and no column already built — only what the menu offers and
-$ # what a column built from a drawer is called.
-$ schema triage
-  triage · 11 drawer(s) over 70/83 kind(s)
-  19 names · triage · type part of one to begin
-$ # on its own it draws what is in force. a drawer carries the count of values it
-$ # reaches, because that is the one thing about it you cannot read off its name;
-$ # a leaf carries its name, because its count is one add away.
-$ schema
-  triage           375   70 kinds
-     network        47   17 kinds
+  85 kinds · add one to begin
+$ # a taxonomy is a reader's vocabulary, and the shell's own. it decides which
+$ # names you are shown and nothing about what a reading is.
+$ taxonomy triage
+  triage · 11 names over 70/70 of its kinds in this pile
+  6 names · triage · add one to begin
+$ # the tree, counted from the pile.
+$ taxonomy
+  triage           374   70 kinds
+     network        51   17 kinds
         address     24   5 kinds
            ip  internal-ip  valid-ip  addr  host
-        locator      9   2 kinds
+        locator     13   2 kinds
            url  email
         subnets      5   6 kinds
            subnet  cidr  mask  octet4  last-octet  octet-sum
@@ -606,10 +566,10 @@ $ schema
      identity       60   11 kinds
         person  name  first-name  last-name  username  account  emp  company
         password  password-record  notes
-     text-shape    301   15 kinds
+     text-shape    300   15 kinds
         string  short-string  word  char  text  sentence  paragraph  blob
         line  length  entropy  vowels  first-letter  last-letter  format
-     tabular        60   13 kinds
+     tabular        59   13 kinds
         table  row  header  field  pair  list  item  object  block  seq  first
         last  record
      time           15   6 kinds
@@ -617,53 +577,133 @@ $ schema
      geography       8   8 kinds
         nation  country  region  city  town  river  geo  place
 
-  triage · 11 drawer(s) over 70/83 kind(s)
-  schemas: gardener  netops  triage
-  19 names · triage · type part of one to begin
-$ # 78 kinds become 14 names. the counts are unions at every level and never
-$ # sums: text-shape reads 301 where its fifteen kinds add up to about 670, and
-$ # the gap is the strings that are a word and a string and a short-string at
-$ # once.
+  triage · 11 names over 70/70 of its kinds in this pile
+  taxonomies: gardener  netops  triage
+  6 names · triage · add one to begin
+$ # only the taxonomy's top names are listed; every other kind is counted, not shown.
 $ add
-  19 name(s) over 83 kind(s) · triage · naming one is the first column
-  network        47   17 kinds
-  identity       60   11 kinds
-  text-shape    301   15 kinds
-  tabular        60   13 kinds
-  time           15   6 kinds
-  geography       8   8 kinds
+  6 name(s) · triage · naming one is the first column
+  network        51   17 kinds · 47 ways
+  identity       60   11 kinds · 15 ways
+  text-shape    300   15 kinds · 40 ways
+  tabular        59   13 kinds · 44 ways
+  time           15   6 kinds · 9 ways
+  geography       8   8 kinds · 10 ways
 
-  13 outside triage
-  kind 8·2   proj 2          number 1     rose 1·2    value 1·2
-  related 4  bugambilia 1·2  order 1      ticket 1·2
-  flag 2     lilly 1         receipt 1·6  type 1·2
-  19 names · triage · type part of one to begin
-$ # a drawer is added, narrowed and typed exactly like a kind. more than one way
-$ # in, so it says what it would merge and waits — which is also how you look
-$ # inside one without taking it.
+  15 kind(s) outside triage · add --all shows them
+  6 names · triage · add one to begin
+$ add --all
+  85 kind(s) · naming one is the first column
+  string             251   14 ways
+  short-string       158
+  word               152   2 ways
+  text                43   8 ways
+  host                16   8 ways
+  row                 15   14 ways
+  record              14   10 ways
+  char                13
+  ip                  13   12 ways
+  notes               13
+  password-record     13
+  email               12   5 ways
+  username            10
+  entropy              9
+  blob                 8   4 ways
+  field                8
+  kind                 8   2 ways
+  first-letter         7
+  password             7
+  sentence             7   2 ways
+  domain               6
+  format               6
+  last-letter          6
+  name                 6   3 ways
+  user                 6
+  company              5
+  hours                5
+  url                  5   2 ways
+  line                 4
+  object               4   6 ways
+  pair                 4   3 ways
+  paragraph            4
+  related              4
+  seq                  4
+  date                 3   4 ways
+  day                  3
+  emp                  3
+  endpoint             3   2 ways
+  internal-ip          3
+  length               3
+  port                 3   2 ways
+  account              2   2 ways
+  block                2   2 ways
+  city                 2
+  country              2
+  first                2
+  first-name           2
+  flag                 2
+  item                 2
+  last                 2
+  last-name            2
+  nation               2
+  octet-sum            2
+  place                2   3 ways
+  proj                 2
+  river                2
+  route                2   2 ways
+  table                2   2 ways
+  vowels               2
+  year                 2
+  addr                 1
+  bugambilia           1   2 ways
+  cidr                 1   4 ways
+  geo                  1
+  header               1
+  last-octet           1   2 ways
+  lilly                1
+  list                 1
+  mask                 1
+  month                1
+  number               1
+  octet4               1
+  order                1
+  person               1   2 ways
+  receipt              1   6 ways
+  region               1
+  rose                 1   2 ways
+  subnet               1
+  ticket               1   2 ways
+  timestamp            1
+  town                 1
+  trace                1
+  type                 1   2 ways
+  valid-ip             1
+  value                1   2 ways
+  6 names · triage · add one to begin
+$ # a name is written out as the kinds it stands for before the session sees it.
+$ # more than one way in needs the *, the same as a kind does.
 $ add network
-  network — 17 kinds
-     network       47   all of them
-     host          16
-     ip            13
-     email         8
-     url           5
-     endpoint      3
-     internal-ip   3
-     port          3
-     octet-sum     2
-     route         2
-     addr          1
-     cidr          1
-     last-octet    1
-     mask          1
-     octet4        1
-     subnet        1
-     trace         1
-     valid-ip      1
-  say it again to mean it, anything else to cancel
-  19 names · triage · type part of one to begin
-$ add network
+  network covers 47 ways in this pile · say network* or narrow it
+     network{addr, cidr, email, endpoint, host, internal-ip, ip, last-octet, mask, octet-sum, octet4, port, route, subnet, trace, url, valid-ip}*
+     host
+     ip
+     email
+     url
+     endpoint
+     internal-ip
+     port
+     octet-sum
+     route
+     addr
+     cidr
+     last-octet
+     mask
+     octet4
+     subnet
+     trace
+     valid-ip
+  6 names · triage · add one to begin
+$ add network*
   network
   ----------------------------------------------
   10.0.0.5
@@ -693,8 +733,11 @@ $ add network
   443
   8.8.8.8
   8080
+  alice.l@quillspec.example
   alice@larkfield.example
+  alice@northgate.example
   backup-03.corp
+  brightcast@larkfield.example
   calltide.example
   db01.internal
   flowgate.example
@@ -709,6 +752,7 @@ $ add network
   mail-01.corp
   pixvault@larkfield.example
   robert@203.0.113.42
+  robert@ridgeway.example
   trace
   user@db.local
   voipline.example
@@ -716,94 +760,84 @@ $ add network
 
 >  network
 
-  network 44/47·15   text-shape 19/47·3   tabular 3/47·3   identity 2/47·1   receipt 2/47·2   bugambilia 1/47   number 1/47
-$ # the same offers as one step at a time, rolled up. 43 of the 45 values can
-$ # step to something that lands back inside network, and the exits worth seeing
-$ # are the 19 into text and the 2 into identity.
+  network 44/51·38   identity 2/51   text-shape 23/51·5   tabular 7/51·5
 $ add
-  network      44/47   15 kinds
-  text-shape   19/47   3 kinds
-  tabular      3/47   3 kinds
-  identity     2/47   1 kind
-  receipt      2/47   2 ways
-  bugambilia   1/47
-  number       1/47
+  network      44/51   15 kinds · 38 ways
+  identity     2/51   1 kind
+  text-shape   23/51   4 kinds · 5 ways
+  tabular      7/51   3 kinds · 5 ways
+
+  5 kind(s) outside triage · add --all shows them
 >  network
 
-  network 44/47·15   text-shape 19/47·3   tabular 3/47·3   identity 2/47·1   receipt 2/47·2   bugambilia 1/47   number 1/47
-$ # the same column under a network engineer's schema. same rows, same steps,
-$ # different vocabulary: triage says you are inside the network world, netops
-$ # says where inside. addresses reads 21, exactly what ip reads alone, so
-$ # internal-ip and valid-ip reach nothing ip does not — the pile agreeing with
-$ # what the schema claimed was narrower.
-$ schema netops
-  netops · 7 drawer(s) over 45/83 kind(s)
+  network 44/51·38   identity 2/51   text-shape 23/51·5   tabular 7/51·5
+$ # the query is the group spelled out, and the shorter form for read.ts.
+$ query
+  ./read.ts 'network{addr, cidr, email, endpoint, host, internal-ip, ip, last-octet, mask, octet-sum, octet4, port, route, subnet, trace, url, valid-ip}*'
+  ./read.ts --taxonomy triage 'network*'
 >  network
 
-  addresses 22/47·3   noise 20/47·6   host 17/47·5   paths 8/47·2   services 8/47·2   locators 7/47·1   subnets 4/47·6   account 2/47   receipt 2/47·2   bugambilia 1/47   number 1/47
+  network 44/51·38   identity 2/51   text-shape 23/51·5   tabular 7/51·5
+$ # another vocabulary over the same reading: the reading does not move.
+$ taxonomy netops
+  netops · 7 names over 45/45 of its kinds in this pile
+>  network
+
+  addresses 22/51·13   host 17/51·5   subnets 4/51·10   services 8/51·4   paths 8/51·3   locators 7/51·3   noise 24/51·10
 $ add
-  addresses    22/47   3 kinds
-  noise        20/47   6 kinds
-  host         17/47   5 ways
-  paths        8/47   2 kinds
-  services     8/47   2 kinds
-  locators     7/47   1 kind
-  subnets      4/47   6 kinds
-  account      2/47
-  receipt      2/47   2 ways
-  bugambilia   1/47
-  number       1/47
+  addresses   22/51   3 kinds · 13 ways
+  host        17/51   5 ways
+  subnets     4/51   6 kinds · 10 ways
+  services    8/51   2 kinds · 4 ways
+  paths       8/51   2 kinds · 3 ways
+  locators    7/51   1 kind · 3 ways
+  noise       24/51   7 kinds · 10 ways
+
+  6 kind(s) outside netops · add --all shows them
 >  network
 
-  addresses 22/47·3   noise 20/47·6   host 17/47·5   paths 8/47·2   services 8/47·2   locators 7/47·1   subnets 4/47·6   account 2/47   receipt 2/47·2   bugambilia 1/47   number 1/47
-$ # and with nothing in force, the 23 kinds that were there the whole time. the
-$ # column keeps the name it was built with, because a schema never revises a
-$ # reading already made.
-$ schema off
-  no schema · 83 kind(s)
+  addresses 22/51·13   host 17/51·5   subnets 4/51·10   services 8/51·4   paths 8/51·3   locators 7/51·3   noise 24/51·10
+$ taxonomy off
+  no taxonomy · 85 kind(s)
 >  network
 
-  ip 22/47·11   host 17/47·5   text 11/47   entropy 10/47   string 8/47·2   email 7/47·2   route 6/47·2   endpoint 5/47·2   port 4/47·2   internal-ip 3/47   account 2/47   cidr 2/47·4   octet-sum 2/47   receipt 2/47·2   trace 2/47   bugambilia 1/47   last-octet 1/47·2   mask 1/47   number 1/47   object 1/47   octet4 1/47   record 1/47·2   row 1/47   subnet 1/47   valid-ip 1/47
+  ip 22/51·11   host 17/51·5   text 15/51   entropy 14/51   domain 8/51   string 8/51·2   user 8/51   email 7/51·3   route 6/51·2   endpoint 5/51·2   record 5/51·3   port 4/51·2   word 4/51   internal-ip 3/51   account 2/51   cidr 2/51·4   octet-sum 2/51   receipt 2/51·2   trace 2/51   bugambilia 1/51   last-octet 1/51·2   mask 1/51   number 1/51   object 1/51   octet4 1/51   row 1/51   subnet 1/51   valid-ip 1/51
 $ add
-  ip            22/47   11 ways
-  host          17/47   5 ways
-  text          11/47
-  entropy       10/47
-  string        8/47   2 ways
-  email         7/47   2 ways
-  route         6/47   2 ways
-  endpoint      5/47   2 ways
-  port          4/47   2 ways
-  internal-ip   3/47
-  account       2/47
-  cidr          2/47   4 ways
-  octet-sum     2/47
-  receipt       2/47   2 ways
-  trace         2/47
-  bugambilia    1/47
-  last-octet    1/47   2 ways
-  mask          1/47
-  number        1/47
-  object        1/47
-  octet4        1/47
-  record        1/47   2 ways
-  row           1/47
-  subnet        1/47
-  valid-ip      1/47
+  ip            22/51   11 ways
+  host          17/51   5 ways
+  text          15/51
+  entropy       14/51
+  domain        8/51
+  string        8/51   2 ways
+  user          8/51
+  email         7/51   3 ways
+  route         6/51   2 ways
+  endpoint      5/51   2 ways
+  record        5/51   3 ways
+  port          4/51   2 ways
+  word          4/51
+  internal-ip   3/51
+  account       2/51
+  cidr          2/51   4 ways
+  octet-sum     2/51
+  receipt       2/51   2 ways
+  trace         2/51
+  bugambilia    1/51
+  last-octet    1/51   2 ways
+  mask          1/51
+  number        1/51
+  object        1/51
+  octet4        1/51
+  row           1/51
+  subnet        1/51
+  valid-ip      1/51
 >  network
 
-  ip 22/47·11   host 17/47·5   text 11/47   entropy 10/47   string 8/47·2   email 7/47·2   route 6/47·2   endpoint 5/47·2   port 4/47·2   internal-ip 3/47   account 2/47   cidr 2/47·4   octet-sum 2/47   receipt 2/47·2   trace 2/47   bugambilia 1/47   last-octet 1/47·2   mask 1/47   number 1/47   object 1/47   octet4 1/47   record 1/47·2   row 1/47   subnet 1/47   valid-ip 1/47
-$ # a schema does not have to match the pile. six of the gardener's members are
-$ # not kinds anybody here wrote, so they read zero and it says which.
-$ schema gardener
-  gardener · 3 drawer(s) over 6/83 kind(s) · 3 member(s) this pile has no kind for: byte computername cpu
->  network
-
-  itstuff 31/47·2   text 11/47   entropy 10/47   string 8/47·2   email 7/47·2   route 6/47·2   endpoint 5/47·2   port 4/47·2   internal-ip 3/47   account 2/47   cidr 2/47·4   octet-sum 2/47   receipt 2/47·2   trace 2/47   flower 1/47·1   last-octet 1/47·2   mask 1/47   number 1/47   object 1/47   octet4 1/47   record 1/47·2   row 1/47   subnet 1/47   valid-ip 1/47
+  ip 22/51·11   host 17/51·5   text 15/51   entropy 14/51   domain 8/51   string 8/51·2   user 8/51   email 7/51·3   route 6/51·2   endpoint 5/51·2   record 5/51·3   port 4/51·2   word 4/51   internal-ip 3/51   account 2/51   cidr 2/51·4   octet-sum 2/51   receipt 2/51·2   trace 2/51   bugambilia 1/51   last-octet 1/51·2   mask 1/51   number 1/51   object 1/51   octet4 1/51   row 1/51   subnet 1/51   valid-ip 1/51
 
 === traceroutes ===
 
-  83 kinds · type part of one to begin
+  85 kinds · add one to begin
 $ # a fact is exactly three strings, so no line holds a route. a traceroute is a
 $ # document: the whole route is one value, and the hops found inside it are
 $ # separate facts about it.

@@ -1,14 +1,31 @@
 # StringWalk
 
+> This study continues in EdgeOnEdge.
+> StringWalk explored reading connected data through three-string facts. EdgeOnEdge carries forward the pile, shared-string joins and > > > column walk, while moving the description of a connection into tags on the connection itself.
+
+Everyone's paperwork is a useless pile until somebody spends a week organizing
+it. This skips that week: it cuts the pile apart and puts it back together so
+the connections jump out at you the moment you look, with zero AI tricks.
+
 ```sh
-npx tsx sw.ts                      # a shell over the pile
-npx tsx sw.ts --schema netops      # with a taxonomy in force
-npx tsx scenarios.ts               # replay saved readings as text
+./sw.ts                            # a shell over the pile
+./sw.ts --taxonomy netops          # only a taxonomy's names
+./read.ts 'host resolves-to/account/ticket'   # one reading, only the table
+npm run gui                        # the page, at http://127.0.0.1:7474/
+./scenarios.ts                     # replay saved readings as text
+./cut.ts                           # cut and report, keep nothing (--debug writes pile/cut)
+./sw.ts --introduce mine.pile      # one more pile, for this run only
+./sw.ts --timing                   # where startup time goes, on stderr
+./any2pile.ts < document.txt         # a raw document as a one-line pile
 ```
 
-No build step. `GUI.md` is a design for a browser front end, unbuilt.
+No build step for the tools: Node 24 runs the TypeScript as it is, so a local
+import is spelled with its real `.ts` extension. The browser front end is the
+one thing compiled — `npm install` once for TypeScript, then `npm run gui` builds
+it and serves it at `http://127.0.0.1:7474/`. *One session, three clients* says
+how the three fit together.
 
-`piles/` holds eight files written by people and programs that never
+`pile/introduced/` holds eight files written by people and programs that never
 coordinated: a DNS export, an auth log, a ticket export, two traceroutes, a
 scraper that found pairs it could not name, a taxonomy of kinds, a nursery
 receipt, and 930 lines of real data whose producer said as little as it is
@@ -28,7 +45,7 @@ it, an address, a blob of whitespace. A line is one fact somebody wrote down:
 ["mike", "", "summer2006"]
 ```
 
-Merging is `cat piles/*.pile | sort -u`.
+Merging is `cat pile/introduced/*.pile | sort -u`.
 
 ## Three, and nothing longer
 
@@ -77,6 +94,84 @@ write different relations, both in good faith.
 
 So the two halves of a line are not the same kind of claim, and the format
 should not pretend they are. Everything below follows from that.
+
+## Introduced and cut
+
+```
+pile/introduced/   _auth.pile  _dns.pile  _garden.pile  …    kept
+the cut            all of it, and what cutters made of it    in memory, never stored
+```
+
+One directory is kept, and the cut is not stored at all.
+
+**Introducing** brings something into the pile: a raw document, whole, as a
+value — or lines a person wrote by hand, because nothing can run a person
+again. It is the one thing nothing can regenerate, so it is the one thing kept.
+It is also the one step that is trivial to get right: it can only be wrong by
+copying wrong.
+
+`any2pile.ts` is the whole of it for a raw document — a file or stdin in, one
+line out, the same line either way:
+
+```
+[<the whole document>, "document, is, is, document", <the whole document>]
+```
+
+No byte changed, no file name written down, and a document that is not valid
+UTF-8 refused rather than copied wrong. Keep it with
+`any2pile.ts doc.txt > pile/introduced/_doc.pile`, or read with it once with
+`sw.ts --introduce <(any2pile.ts < doc.txt)`.
+
+**Cutting** is everything else. A cut starts from every introduced pile and runs
+every cutter in `cutters/` over what it holds until a round changes nothing. A
+cutter is a function: `cutters/email.ts` exports one from every line of the cut
+to its own lines, and what it returns becomes the pile `email.pile`. Nothing
+registers it.
+
+```
+email       every email inside every value, split into user and domain
+passwords   every PasswordRecord document, cut into records
+```
+
+A cutter is called in memory, not run through a pipe, and that is not a
+detail. A document sits in every line about it — each record cut from it says
+where it came from — and through a pipe each of those lines is the whole
+document written out and read back in, every round, so the cost grew with the
+square of the document. Handed to a function, those lines share one string.
+
+Cutters are loaded by plain `node`, so a local import is spelled
+`../stringwalk.ts`. Any other executable in `cutters/` — a script in another
+language — is still a cutter, run as a process: every line on stdin as JSON, its
+own lines on stdout. It pays for the pipe a function does not.
+
+A cutter will be wrong sometimes, and that is why what it writes is never kept.
+A bad cut is not a data problem; it is a bug you fix before the next cut. A cut
+always starts from empty, because a cutter that reads what it wrote last time
+can keep a line alive after the bug that wrote it is gone.
+
+**The cut lives in memory.** `sw.ts` cuts every time it starts and reads what
+came out, so what you read is what `pile/introduced` says now, and once you stop
+nothing of it is left on disk. A stored cut would be a second copy of everything
+introduced, in plain text, still there after you stopped reading — and it would
+never have saved anything, because the reader recuts on every start anyway. A
+pile is a named text, not a file: `_rfg.pile` and `email.pile` still say who
+wrote what.
+
+`--debug` writes the cut out, to `pile/cut` or to `--debug=<dir>`, for when you
+want to look; a cut that fails under `--debug` writes what it had when it
+failed. Every cut deletes `pile/cut` first, so a dump you forgot does not stay.
+`./cut.ts` on its own runs the cut, says what came out pile by pile, and
+keeps nothing.
+
+**A pile can be introduced for one run** without being kept:
+`sw.ts --introduce mine.pile`, as many times as you like, and `cut.ts` takes the
+same flag. It goes through exactly what `pile/introduced` goes through —
+`_mine.pile` in the cut, run past every cutter — and is gone with the process.
+It is a path and not stdin, because stdin is where the shell's commands come
+from; a producer still pipes in as `--introduce <(producer)`.
+
+The underscore on an introduced pile is only there so it can never share a name
+with a cutter's output. Inside the cut a pile is a pile.
 
 ## A relation has a shape
 
@@ -270,7 +365,7 @@ naming a second thing replaces the reading. It asks twice.
 
 ```
 add [path]    cd [path]      table          jump [kind] [n]
-tree [flat]   shorten [path] save <name>    schema [name]   help   quit
+tree [flat]   shorten [path] save <name>    taxonomy [name]   query   help   quit
 ```
 
 `add` on its own lists everything you could add here — the offers with their
@@ -434,43 +529,43 @@ It is also why a chain is lines rather than a longer line. Five levels is four
 facts. Putting them in one line would put the chain in the line's structure,
 and structure is not a string — which is where this whole format started.
 
-## A schema is loaded after the fact
+## A taxonomy is a reader's, not the pile's
 
-Seventy-eight kinds is a screen of names. A schema says which of them are shown
-under one, and naming a drawer is naming a thing:
+Eighty-five kinds is a screen of names, and a gardener wants two of them:
+`flower` and `itstuff`. A taxonomy is that vocabulary — names for groups of
+kinds — and it belongs to whoever is reading. The shell takes one with
+`taxonomy <name>` or `--taxonomy`, read.ts with `--taxonomy`, and the page from
+its picker:
 
 ```
-$ schema triage
-  triage · 11 drawer(s) over 70/78 kind(s)
+$ taxonomy triage
+  triage · 11 names over 70/70 of its kinds in this pile
 $ add
-  14 name(s) over 78 kind(s) · triage · naming one is the first column
-  network        45   17 kinds
-  identity       60   11 kinds
-  text-shape    301   15 kinds
-  tabular        60   13 kinds
-  time           15   6 kinds
-  geography       8   8 kinds
+  6 name(s) · triage · naming one is the first column
+  network        51   17 kinds · 47 ways
+  identity       60   11 kinds · 15 ways
+  text-shape    300   15 kinds · 40 ways
+  tabular        59   13 kinds · 44 ways
+  time           15   6 kinds · 9 ways
+  geography       8   8 kinds · 10 ways
 
-  8 outside triage
-  kind 8·2  related 4  flag 2  proj 2  number 1  ticket 1·2  type 1·2  value 1·2
+  15 kind(s) outside triage · add --all shows them
 ```
 
-**The listing is the schema's own shape**, top level in the order its author
-wrote it, because the thing you are choosing from should look like the thing you
-loaded. Sorting by count instead scatters six drawers through thirty-three loose
-kinds, which is the wall the schema was loaded to take down. A name the schema
-says nothing about has no place in its shape, so it is not given one: counted,
-gridded, and typed exactly like any other name. The schema narrows what is worth
-drawing as a shape, never what is reachable.
+**Only its names are shown.** The listing is the taxonomy's top level in the
+order its author wrote it, and a kind it says nothing about is not listed at all
+— as if it did not exist, but for the count at the bottom. `add --all` lists
+every kind again, and so does *show everything* on the page. Nothing is taken out
+of the pile: a hidden kind is still typeable and still reached by every step.
 
-On its own, `schema` draws what is in force:
+On its own, `taxonomy` draws the tree, counted from where the cursor is:
 
 ```
-  triage           373   70 kinds
-     network        45   17 kinds
-        address     23   5 kinds
+  triage           374   70 kinds
+     network        51   17 kinds
+        address     24   5 kinds
            ip  internal-ip  valid-ip  addr  host
-        locator      8   2 kinds
+        locator     13   2 kinds
            url  email
         subnets      5   6 kinds
            subnet  cidr  mask  octet4  last-octet  octet-sum
@@ -480,86 +575,187 @@ On its own, `schema` draws what is in force:
      identity       60   11 kinds
         person  name  first-name  last-name  username  account  emp  company
         password  password-record  notes
-     text-shape    301   15 kinds
+     text-shape    300   15 kinds
         string  short-string  word  char  text  sentence  paragraph  blob
         line  length  entropy  vowels  first-letter  last-letter  format
 ```
 
-A drawer carries the count of values it reaches, because that is the one thing
-about it you cannot read off its name. A leaf carries its name and nothing else:
-its count is one `add` away, and fifteen leaves on fifteen lines is a paragraph
-rather than a tree.
+A name carries the count of values it reaches, because that is the one thing
+about it you cannot read off its name. A leaf carries its name and nothing else.
 
-**A schema may only merge. It may never assert.** Every column a drawer builds
-could have been built by hand, by naming its members one at a time. It adds no
-line, changes no value, hides no kind, and dropping it leaves every record
-identical. That is what makes it safe to load over data already written, and
-safe to be wrong about: being wrong costs you one reading. What it changes is
-which readings are one word away, which is what people actually do.
-
-A drawer and a kind carry the same grammar — `geography` reads `8 kinds` and
-`kind` reads `2 ways`, both a count of what the name merges — so a drawer is
-never a different sort of thing, only a name with more under it. And the schema's
-coverage is on the screen rather than in a report: eight names here are outside
-`triage`, and under `gardener` seventy-five are.
-
-**The counts are unions at every level, never sums.** `text-shape` reads 301
-where its fifteen kinds add up to about 670. The gap is the strings that are a
-`word` and a `string` and a `short-string` at once, and it is visible because a
-drawer is counted the way the column is built.
-
-**A drawer is added, narrowed and typed exactly like a kind**, and the kinds it
-holds stay typeable underneath it — `network`, then `ip`, then `ip resolves-to`.
-One addressing scheme with three depths instead of two. `jump` reports routes in
-the same vocabulary, so `identity/network` is a route you can hand to `add`.
-
-**A drawer name may not be a kind name.** A drawer called `ip` holding the kind
-`ip` would make `ip` mean two things and leave the bare kind with no name at
-all, so it is refused at load rather than resolved by a rule.
-
-**Never THE taxonomy.** Schemas swap inside a session, and the same column reads
-differently under each:
+**The engine never sees a taxonomy.** Before a name reaches the session it is
+written out as the group of kinds it stands for, and a group is a step in the
+query language like any other — one column, called by its name, merging every
+way into any of its kinds:
 
 ```
-  network 43/45·15   text-shape 19/45·3   tabular 3/45·3   identity 2/45·1
-
-  addresses 21/45·3   noise 20/45·6   host 17/45·5   paths 8/45·2
-  services 8/45·2   locators 7/45·1   subnets 4/45·6   account 2/45
+$ add network*
+$ query
+  ./read.ts 'network{addr, cidr, email, endpoint, host, internal-ip, ip, last-octet, mask, octet-sum, octet4, port, route, subnet, trace, url, valid-ip}*'
+  ./read.ts --taxonomy triage 'network*'
 ```
 
-Same rows, same steps, same 45 strings. `triage` says *you are inside the
-network world and 43 of 45 stay in it*; `netops` says *here is where inside*,
-and calls the text machinery `noise`, which is the honest name for it to that
-reader. A column already built keeps the name you typed for it, because a schema
-never revises a reading already made.
+So a saved reading means the same with or without anybody's vocabulary, and two
+taxonomies that both say `subnets` for different kinds cannot make one string
+mean two readings. The short form is for whoever holds the taxonomy:
+`--taxonomy triage` writes `network` out again before anything is asked.
 
-**A schema is a hypothesis, not a law.** The counts check it as they go.
-`addresses` reads 21, exactly what `ip` reads alone, so every value that can
-reach an `internal-ip` can reach an `ip` — the pile agreeing with what the
-schema claimed was narrower. It could have disagreed. A member that pushed its
-parent's count up would mean the schema has it backwards, said as a number in a
-menu, with nothing stopping you proceeding anyway.
+**A group is added and typed exactly like a kind.** More than one way in needs
+`*`, and the kinds under it stay typeable underneath — `network*`, then `ip`,
+then `ip resolves-to`. A group reached by only one way is called by that phrase,
+the same as a kind.
 
-An enforced schema cannot be tested, because whatever would have contradicted it
-was refused at the door. This one is falsifiable and not binding, which is what
-you want from a conjecture and the wrong thing to want from a constraint.
+**The counts are unions, never sums.** `text-shape` reads 300 where its fifteen
+kinds add up to about 670 — the strings that are a `word` and a `string` and a
+`short-string` at once. That cannot be worked out from the kinds' own counts, so
+a client sends its groups with every request and the view counts them. The groups
+shape that one answer and are gone.
 
-**A schema is lines.** `schemas/<name>.sch` is a pile file — three strings, same
-parser, same merge — where every line is one edge of the tree:
+**A member need not be in the pile.** The gardener's `itstuff` lists `byte`,
+`computername` and `cpu`, which nobody here wrote. They stay in the group and
+are said to be missing — in the shell's tree, and struck through on the page —
+so the day a document with a cpu in it arrives, every query that names `itstuff`
+covers it already. A group is refused only when none of its kinds can be reached:
+
+```
+$ ./read.ts --taxonomy gardener 'flower*/itstuff/itstuff'
+  flower            | watered-by host    | has-address ip via watered-by host
+  ------------------+--------------------+-----------------------------------
+  Barbara Karst     | greenhouse-01.corp | 10.0.0.5
+  Casa Blanca       | ?                  | ?
+  Mme Isaac Pereire | ?                  | ?
+```
+
+**Never THE taxonomy.** Swap one inside a session and the reading does not move;
+what is offered from the same `network` column reads differently under each:
+
+```
+  network 44/51·38   identity 2/51   text-shape 23/51·5   tabular 7/51·5
+
+  addresses 22/51·13   host 17/51·5   subnets 4/51·10   services 8/51·4
+  paths 8/51·3   locators 7/51·3   noise 24/51·10
+```
+
+Same rows, same steps, same 51 values. `triage` says *you are inside the network
+world and 44 of 51 stay in it*; `netops` says *here is where inside*, and calls
+the text machinery `noise`, which is the honest name for it to that reader.
+
+**A taxonomy may only merge. It may never assert.** Every column a group builds
+could be built by writing the group out by hand. It adds no line, changes no
+value, and dropping it leaves every record identical, which is what makes it safe
+to be wrong about: being wrong costs you one reading.
+
+**A taxonomy is a hypothesis, not a law.** The counts check it as they go. From
+that `network` column `addresses` reads 22, exactly what `ip` reads alone, so
+nothing else under it reaches a value `ip` does not — the pile agreeing with
+what the taxonomy claimed was narrower. It could have disagreed, and the menu
+would have said so as a number, with nothing stopping you.
+
+**A taxonomy is lines.** `taxonomies/<name>.pile` is a pile file, every line one
+edge of the tree with the child on the left:
 
 ```
 ["ip", "kind, is-a, example, kind", "address"]
 ```
 
-So a schema edits like data, merges like data, and can be `cat` into `piles/`
-later if you want to walk it. It lives outside `piles/` because everything in
-`piles/` is loaded always, and a schema nobody asked for should not be putting
-`network` and `noise` in the root listing. Having the lines and naming them are
-two acts.
+A name hangs off one parent, there is one top, and nothing is under itself. It
+lives outside `pile/` because everything in the pile is loaded always, and a
+vocabulary nobody asked for should not decide what the root lists. The shell and
+read.ts read it from disk; the page fetches it from the server, reads it with the
+same `taxonomy.ts`, and keeps its name in the URL as `t=` — beside the session,
+not in it.
 
-A schema does not have to fit the pile. `schemas/gardener.sch` names `byte`,
-`computername` and `cpu`, which nobody here wrote; they read zero and `schema`
-says which. That is what lets a schema be shared while a pile stays private.
+## One reading, one table
+
+The shell is where a reading is found. `read.ts` is where it is asked for
+again, with nothing asked back: a query in, the table out, and nothing else on
+stdout.
+
+```sh
+./read.ts 'host resolves-to/account/ticket'
+./read.ts 'host resolves-to/(account/ticket, ip has-address)'
+./read.ts 'record username-of/notes~/ip'
+./read.ts --taxonomy gardener 'flower*/receipt~/host/account'
+```
+
+A step is exactly what `add` takes — a kind, a kind narrowed by a verb, a group
+— and the rest of a query is the few characters a kind can never contain:
+
+```
+a/b          b is a step from a
+a/(b, c/d)   b and c both hang off a, and d hangs off c
+a*           every way into a, said on purpose
+a~           a's column drawn shortened
+n{a, b}      one column called n, merging the kinds a and b
+```
+
+Whitespace around them means nothing, so a long query can be laid out like the
+tree it describes. Always single-quote one: it has spaces and brackets in it,
+and inside single quotes `*` and `~` are safe.
+
+**Strict, because it cannot ask.** A kind with more than one way in, written
+without `*`, is refused with the ways listed — in the shell and in a query alike
+— because a query that meant one way today would otherwise quietly mean two the
+day a second producer arrives:
+
+```
+$ ./read.ts 'domain/email/user'
+read: 'domain/email/user'
+              ^ email has 2 ways from has domain · say email* or narrow it
+     email domain-of   6/6
+     email host-of     2/6
+```
+
+**Exact, for the same reason.** Names are whole, in the shell too: a miss adds
+nothing and says what you probably meant. A saved query that resolved a partial
+name one way today and another way tomorrow is worse than one that fails.
+
+**Groups are in the string; taxonomies are not.** A group carries its kinds, so
+a query names everything it merges and needs nothing beside it to be read. A
+taxonomy only decided how the group got typed.
+
+**`query` in the shell writes it for you.** It prints the reading you built as a
+`./read.ts` command, kind first, `*` where you merged, `~` where you shortened
+and a group's kinds sorted — so two people's queries for one reading are one
+string — and, under a taxonomy, the shorter `--taxonomy` form beside it. The
+replay checks the round trip: every saved reading's query, run through `read.ts`,
+has to draw the table the shell drew.
+
+## One session, three clients
+
+The shell, read.ts and the page do not each know how to build a reading.
+`session.ts` does, as one pure state machine:
+
+```
+step(ctx, session, command)         -> { session, message }
+view(ctx, session, message, groups) -> view
+```
+
+A session is `{ query, focus }` — the reading written down, and the path to the
+cursor — and never a pile. A command is `add`, `cd`, `shorten` or `query`, done
+whole or not at all; one that cannot be done gives back the session it was given
+and a message saying why. The shell holds its session in a variable. read.ts
+asks for one view. `server.ts` holds no session at all: every request brings the
+one it is about, so a restart loses nothing. The page keeps its session in the
+URL, so a reload keeps your place, a link reopens a reading, and the back button
+is undo.
+
+```sh
+npm run gui                           # tsc -p gui, then ./server.ts on 127.0.0.1:7474
+./server.ts --introduce mine.pile     # the server cuts once, at start
+```
+
+```
+POST /step                  { session, command, groups } -> { session, view }
+GET  /taxonomies/           the taxonomy names
+GET  /taxonomies/<n>.pile   one of them, as lines
+GET  /                      the page
+```
+
+`api.ts` is the contract: types only, so the page imports the shapes without a
+line of the engine. When a client needs something those shapes do not carry, it
+arrives as a change to that file. Localhost, no token — anything on this machine
+can ask the server for the pile.
 
 ## Keeping a reading
 
@@ -574,7 +770,7 @@ $ save hosts-and-accounts
 ```
 
 ```sh
-npx tsx scenarios.ts > check/scenarios.txt
+./scenarios.ts > check/scenarios.txt
 git diff check/scenarios.txt        # did any saved reading move?
 ```
 
@@ -583,7 +779,7 @@ resolution, matching, the tree, the menus and the table. Piped in, the shell
 echoes each command, so the output is a transcript and a diff points at the
 command whose result changed.
 
-It runs against whatever is in `piles/`. Add a line and the diff tells you
+It runs against whatever is in `pile/introduced/`. Add a line and the diff tells you
 which readings it altered. Nothing is asserted and nothing screams: a renamed
 relation leaves a table with no rows, a vanished column leaves a step
 unapplied, a step that finds nothing leaves holes. Each is a change you read in
@@ -609,8 +805,9 @@ the diff.
   to one address stops is where a reader stopped, and no line records it.
 - **A path is a value.** If order matters, the ordered thing is a string you
   can stand on, and the facts about it are more lines.
-- **A schema is a lens, not a law.** It may merge and never assert, several can
-  be in force over the same lines, and being wrong about one costs a reading.
+- **A taxonomy is a reader's vocabulary, not the pile's.** It may merge and never
+  assert, anyone can bring their own over the same lines, and the engine only
+  ever sees the groups it writes out.
 
 ## What it refuses
 
@@ -621,13 +818,13 @@ that are the load-bearing part.
 having coordinated, or on `sameAs` lines that are themselves claims somebody has
 to stand behind. Here the join is on the literal bytes. `paris` in a nursery
 receipt and `paris` in a json blob are one node because they are one string, and
-nobody arranged it. That is why `cat piles/*.pile | sort -u` is the whole merge
+nobody arranged it. That is why `cat pile/introduced/*.pile | sort -u` is the whole merge
 — and it is the same reason nothing can tell a sound join from an unsound one.
 What would let it is what it declined to record.
 
 **No inference.** A class in RDFS or OWL entails triples a reasoner then adds. A
-drawer derives nothing. It groups names in a menu, and unloading it leaves the
-pile exactly as it was.
+taxonomy derives nothing. It names groups of kinds for one reader, and dropping
+it leaves the pile and every reading exactly as they were.
 
 **No shared vocabulary.** The relation carries its own — kinds at the ends,
 verbs between — so every line says what it means in both directions and there is
@@ -638,7 +835,7 @@ order would conflict, timestamps would need reconciling clocks; none of it
 exists, so a union is the entire operation and eight uncoordinated producers are
 safe to `cat` together. **The commitment that usually happens at write time
 happens at read time here, and read time is revisable.** Being wrong about a
-schema costs one reading. Being wrong in a system that enforced one costs the
+taxonomy costs one reading. Being wrong in a system that enforced one costs the
 data, and you find out years later when somebody asks a question nobody
 anticipated.
 
@@ -650,7 +847,7 @@ make it authoritative is the identity it gave up.
 
 ## Deliberately not here
 
-No picture. No grouping of relations that mean the same thing — a schema groups
+No picture. No grouping of relations that mean the same thing — a group merges
 kinds, and the same move over verbs is not built. No way to remove
 a column short of starting the reading over. Nothing caps how wide a column
 gets, so one value from `rfg.pile` runs to thousands of characters across.

@@ -5,8 +5,10 @@
     "moduleResolution": "nodenext",
     "strict": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
     "typeRoots": ["../node_modules/@types"],
     "types": ["node"]
   },
-  "include": ["*.ts"]
+  "include": ["*.ts", "cutters/*.ts"]
 }

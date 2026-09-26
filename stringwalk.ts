@@ -107,22 +107,24 @@ export function readRelation(text: string): Relation | null {
   return out;
 }
 
+// A LINE IS CHECKED THE SAME WAY WHEREVER IT COMES FROM — a file, or a cutter
+// handing lines back in memory.
+export function checkLine(line: unknown, where: string): Line {
+  if (!Array.isArray(line) || line.length !== 3 || !line.every(s => typeof s === "string"))
+    throw new Error(`${where}\n  a fact is exactly three strings: value, relation, value` +
+      `\n  a path is not a long line — it is a value, with facts about it`);
+  if (!readRelation(line[1]))
+    throw new Error(`${where}\n  ${JSON.stringify(line[1])} is not a relation.` +
+      `\n  a relation is  ""  |  verb, verb  |  kind, verb, verb, kind`);
+  return line as Line;
+}
+
 export function parse(text: string): Line[] {
   const out: Line[] = [];
   text.split("\n").forEach((raw, i) => {
     const t = raw.trim();
     if (!t) return;
-    const line = JSON.parse(t) as string[];
-    const where = `line ${i + 1}: ${t.slice(0, 60)}`;
-
-    if (line.length !== 3)
-      throw new Error(`${where}\n  a fact is exactly three strings: value, relation, value` +
-        `\n  a path is not a long line — it is a value, with facts about it`);
-    if (!readRelation(line[1]))
-      throw new Error(`${where}\n  ${JSON.stringify(line[1])} is not a relation.` +
-        `\n  a relation is  ""  |  verb, verb  |  kind, verb, verb, kind`);
-
-    out.push(line as Line);
+    out.push(checkLine(JSON.parse(t), `line ${i + 1}: ${t.slice(0, 60)}`));
   });
   return out;
 }

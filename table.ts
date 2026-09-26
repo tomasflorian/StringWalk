@@ -12,7 +12,7 @@
 // joining on the string in the cell to its left — which is why the pivot never
 // has to be reported: it is always the column to the left.
 
-import { readRelation, type Dir, type Pile, type Spot } from "./stringwalk.js";
+import { readRelation, type Dir, type Pile, type Spot } from "./stringwalk.ts";
 
 export type { Dir };
 
@@ -27,7 +27,11 @@ export type { Dir };
 // costs nothing: a phrase is assembled by the reader too — `readRelation` builds
 // it out of two fields and the line never stores it — so this is the same two
 // fields in the other order.
-export interface Step { token: string; phrases: string[] }
+//
+// A GROUP is a step that names several kinds at once — `itstuff{host, ip, url}` —
+// and walks every phrase that reaches any of them. `name` is what its column is
+// called when it merged; `members` are the kinds it listed, found or not.
+export interface Step { token: string; phrases: string[]; name?: string; members?: string[] }
 
 // A PHRASE is verb-then-kind, so its kind is the last word. `related`, the one
 // phrase with no kind at all, is its own.
@@ -45,7 +49,7 @@ export const verbOf = (phrase: string): string => {
 // phrase, because being specific is free when it is the only choice. Several
 // and it says the kind, because that is the honest name for the merge.
 export const nameOf = (s: Step): string =>
-  s.phrases.length === 1 ? s.phrases[0] : s.token;
+  s.phrases.length === 1 ? s.phrases[0] : s.name ?? s.token;
 
 export interface Column {
   id: string;                 // structural: parent plus step. never shown.
@@ -139,21 +143,11 @@ function headerFor(t: Table, parent: string, step: Step): string {
 // when there is more than one.
 
 export interface Way2 { verb: string; phrase: string; have: number }
-export interface KindWays { kind: string; have: number; ways: Way2[] }
 export interface Offer {
-  kind: string;            // the kind, or the drawer a schema shows it under
+  kind: string;
   have: number; of: number;
-  drawer: boolean;         // did a schema merge several kinds into this
-  kinds: KindWays[];       // what it merged, each still typeable
-  ways: Way2[];            // every phrase under it, likewise
+  ways: Way2[];            // every phrase that reaches the kind, most values first
 }
-
-// A KIND -> WHAT IT IS SHOWN AS. Without a schema a kind is shown as itself, so
-// every count below is the same count it always was. With one, several kinds
-// land in one bucket and the bucket is a drawer. That is the only difference,
-// and it is one function.
-export type Label = (kind: string) => string;
-const asItself: Label = k => k;
 
 // Every phrase a value can walk from where it stands.
 function phrasesFrom(pile: Pile, value: string): Set<string> {
@@ -168,80 +162,69 @@ function phrasesFrom(pile: Pile, value: string): Set<string> {
   return out;
 }
 
-function group(reach: Map<string, Set<string>>, of: number, label: Label): Offer[] {
-  // name -> kind -> phrase -> the values that can walk it. Three levels because
-  // a reader narrows through all three: the drawer, the kind in it, the phrase.
-  const byName = new Map<string, Map<string, Map<string, Set<string>>>>();
-  for (const [phrase, who] of reach) {
-    const k = kindOf(phrase);
-    const n = label(k);
-    const m = byName.get(n) ?? byName.set(n, new Map()).get(n)!;
-    const km = m.get(k) ?? m.set(k, new Map()).get(k)!;
-    km.set(phrase, who);
-  }
-
-  // COUNTED AS A UNION AT EVERY LEVEL, never summed. Two kinds a drawer holds
-  // can be reachable from the same value, so adding their counts would report
-  // more values than the column has.
-  const union = (sets: Iterable<Set<string>>): number => {
+// WHAT EVERY PHRASE REACHES FROM A COLUMN: phrase -> the column's values that can
+// walk it, and `of`, how many values there were to try. At the pile, with no
+// column, every phrase and every value it lands on.
+//
+// COUNTED OVER DISTINCT VALUES, not over rows: a row splitting in some other
+// branch must not change what this column can do. And anything that counts
+// several phrases together — a kind, a group of kinds — counts the union of
+// these sets, never the sum of their sizes, because two phrases can be walked by
+// the same value.
+export function reach(pile: Pile, table: Table | null, from: string | null):
+  { reach: Map<string, Set<string>>; of: number } {
+  const out = new Map<string, Set<string>>();
+  if (!table || from === null) {
     const all = new Set<string>();
-    for (const who of sets) for (const v of who) all.add(v);
-    return all.size;
-  };
-  const waysIn = (m: Map<string, Set<string>>): Way2[] =>
-    [...m].map(([phrase, who]) => ({ verb: verbOf(phrase), phrase, have: who.size }))
-      .sort((a, b) => b.have - a.have || a.phrase.localeCompare(b.phrase));
-
-  const out: Offer[] = [];
-  for (const [name, m] of byName) {
-    const kinds: KindWays[] = [...m].map(([kind, km]) =>
-      ({ kind, have: union(km.values()), ways: waysIn(km) }))
-      .sort((a, b) => b.have - a.have || a.kind.localeCompare(b.kind));
-    out.push({
-      kind: name,
-      have: union([...m.values()].flatMap(km => [...km.values()])),
-      of,
-      drawer: kinds.length > 1 || kinds[0].kind !== name,
-      kinds,
-      ways: kinds.flatMap(k => k.ways),
-    });
+    for (const phrase of pile.ways.keys()) {
+      const who = landings(pile, phrase);
+      out.set(phrase, who);
+      for (const v of who) all.add(v);
+    }
+    return { reach: out, of: all.size };
   }
-  return out.sort((a, b) => b.have - a.have || a.kind.localeCompare(b.kind));
-}
-
-export function offers(pile: Pile, table: Table, from: string,
-  label: Label = asItself): Offer[] {
   const col = at(table, from);
-  if (col < 0) return [];
-
-  // COUNTED OVER DISTINCT VALUES, not over rows: a row splitting in some other
-  // branch must not change what this column can do.
+  if (col < 0) return { reach: out, of: 0 };
   const seen = new Set<string>();
   for (const row of table.rows) {
     const cell = row.cells[col];
     if (cell !== null && cell !== undefined) seen.add(cell);
   }
-
-  const reach = new Map<string, Set<string>>();
   for (const value of seen)
     for (const phrase of phrasesFrom(pile, value))
-      (reach.get(phrase) ?? reach.set(phrase, new Set()).get(phrase)!).add(value);
+      (out.get(phrase) ?? out.set(phrase, new Set()).get(phrase)!).add(value);
+  return { reach: out, of: seen.size };
+}
 
-  return group(reach, seen.size, label);
+export function group(reach: Map<string, Set<string>>, of: number): Offer[] {
+  const byKind = new Map<string, Map<string, Set<string>>>();
+  for (const [phrase, who] of reach) {
+    const k = kindOf(phrase);
+    (byKind.get(k) ?? byKind.set(k, new Map()).get(k)!).set(phrase, who);
+  }
+  const out: Offer[] = [];
+  for (const [kind, m] of byKind) {
+    const all = new Set<string>();
+    for (const who of m.values()) for (const v of who) all.add(v);
+    out.push({
+      kind, have: all.size, of,
+      ways: [...m].map(([phrase, who]) => ({ verb: verbOf(phrase), phrase, have: who.size }))
+        .sort((a, b) => b.have - a.have || a.phrase.localeCompare(b.phrase)),
+    });
+  }
+  return out.sort((a, b) => b.have - a.have || a.kind.localeCompare(b.kind));
+}
+
+export function offers(pile: Pile, table: Table, from: string): Offer[] {
+  const r = reach(pile, table, from);
+  return group(r.reach, r.of);
 }
 
 // AT THE ROOT the same list, over the whole pile: every kind anybody named, and
-// how many values would be in the first column. `of` is that same number, since
-// nothing narrows it yet.
-export function rootOffers(pile: Pile, label: Label = asItself): Offer[] {
-  const reach = new Map<string, Set<string>>();
-  for (const phrase of pile.ways.keys())
-    reach.set(phrase, landings(pile, phrase));
-  let all = 0;
-  const seen = new Set<string>();
-  for (const who of reach.values()) for (const v of who) seen.add(v);
-  all = seen.size;
-  return group(reach, all, label);
+// how many values would be in the first column.
+export function rootOffers(pile: Pile): Offer[] {
+  const r = reach(pile, null, null);
+  return group(r.reach, r.of);
 }
 
 // --- what is further out ----------------------------------------------
@@ -259,8 +242,7 @@ export interface Route { kinds: string[]; have: number; of: number; back: boolea
 
 export const routeName = (r: Route): string => r.kinds.join("/");
 
-export function routes(pile: Pile, table: Table, from: string, depth = 3,
-  label: Label = asItself): Route[] {
+export function routes(pile: Pile, table: Table, from: string, depth = 3): Route[] {
   const col = at(table, from);
   if (col < 0) return [];
 
@@ -281,13 +263,10 @@ export function routes(pile: Pile, table: Table, from: string, depth = 3,
       for (const { kinds, at: here } of layer) {
         // A step takes every phrase of its kind at once, exactly as `add` does,
         // so a route's count is the count you get when you walk it.
-        // A step takes every phrase shown under one name — which is the kind,
-        // or the drawer a schema shows the kind under. So a jumped route is
-        // spelled in whatever vocabulary the reader is using.
         const byKind = new Map<string, Set<string>>();
         for (const v of here)
           for (const phrase of phrasesFrom(pile, v)) {
-            const n = label(kindOf(phrase));
+            const n = kindOf(phrase);
             (byKind.get(n) ?? byKind.set(n, new Set()).get(n)!).add(phrase);
           }
 
@@ -341,8 +320,8 @@ function landings(pile: Pile, phrase: string): Set<string> {
 }
 
 // EVERY KIND -> EVERY VALUE IT LANDS ON, over the whole pile. The same number a
-// first column would open with, which is what a drawer holding several kinds
-// has to union rather than add.
+// first column would open with, which is what a group holding several kinds has
+// to union rather than add.
 export function kindValues(pile: Pile): Map<string, Set<string>> {
   const out = new Map<string, Set<string>>();
   for (const phrase of pile.ways.keys()) {
