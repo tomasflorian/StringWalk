@@ -4,7 +4,7 @@
 
 <br><br><br>
 
-> **Superseded by [EdgeOnEdge](EdgeOnEdge https://github.com/tomasflorian/DataStudies-EdgeOnEdge).**
+> **Superseded by [EdgeOnEdge](https://github.com/tomasflorian/DataStudies-EdgeOnEdge).**
 > StringWalk explored reading connected data through three-string facts. EdgeOnEdge carries forward the pile, shared-string joins and column walk, while moving the description of a connection into tags on the connection itself.
 
 
